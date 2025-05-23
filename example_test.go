@@ -2,8 +2,9 @@ package beanstalk_test
 
 import (
 	"fmt"
-	"github.com/beanstalkd/go-beanstalk"
 	"time"
+
+	"github.com/GiterLab/go-beanstalk"
 )
 
 var conn, _ = beanstalk.Dial("tcp", "127.0.0.1:11300")
