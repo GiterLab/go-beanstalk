@@ -16,6 +16,21 @@ func NewTube(c *Conn, name string) *Tube {
 	return &Tube{c, name}
 }
 
+// Auth authenticates the tube t with the given password.
+// If the password is correct, the server will respond with "AUTHORIZED".
+// If the password is incorrect, the server will respond with "NOT_AUTHORIZED".
+func (t *Tube) Auth(password string) error {
+	r, err := t.Conn.cmd(t, nil, nil, "auth", password)
+	if err != nil {
+		return err
+	}
+	_, err = t.Conn.readResp(r, false, "AUTHORIZED")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // Put puts a job into tube t with priority pri and TTR ttr, and returns
 // the id of the newly-created job. If delay is nonzero, the server will
 // wait the given amount of time after returning to the client and before

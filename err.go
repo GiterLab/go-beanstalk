@@ -20,18 +20,19 @@ func (e ConnError) Unwrap() error {
 
 // Error messages returned by the server.
 var (
-	ErrBadFormat  = errors.New("bad command format")
-	ErrBuried     = errors.New("buried")
-	ErrDeadline   = errors.New("deadline soon")
-	ErrDraining   = errors.New("draining")
-	ErrInternal   = errors.New("internal error")
-	ErrJobTooBig  = errors.New("job too big")
-	ErrNoCRLF     = errors.New("expected CR LF")
-	ErrNotFound   = errors.New("not found")
-	ErrNotIgnored = errors.New("not ignored")
-	ErrOOM        = errors.New("server is out of memory")
-	ErrTimeout    = errors.New("timeout")
-	ErrUnknown    = errors.New("unknown command")
+	ErrBadFormat     = errors.New("bad command format")
+	ErrBuried        = errors.New("buried")
+	ErrDeadline      = errors.New("deadline soon")
+	ErrDraining      = errors.New("draining")
+	ErrInternal      = errors.New("internal error")
+	ErrJobTooBig     = errors.New("job too big")
+	ErrNoCRLF        = errors.New("expected CR LF")
+	ErrNotFound      = errors.New("not found")
+	ErrNotIgnored    = errors.New("not ignored")
+	ErrOOM           = errors.New("server is out of memory")
+	ErrTimeout       = errors.New("timeout")
+	ErrUnknown       = errors.New("unknown command")
+	ErrNotAuthorized = errors.New("not authorized")
 )
 
 var respError = map[string]error{
@@ -47,6 +48,7 @@ var respError = map[string]error{
 	"OUT_OF_MEMORY":   ErrOOM,
 	"TIMED_OUT":       ErrTimeout,
 	"UNKNOWN_COMMAND": ErrUnknown,
+	"NOT_AUTHORIZED":  ErrNotAuthorized,
 }
 
 type unknownRespError string
