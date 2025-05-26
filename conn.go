@@ -25,6 +25,8 @@ type Conn struct {
 	watched map[string]bool
 	Tube
 	TubeSet
+
+	auth bool // Auth is true if the connection is authenticated.
 }
 
 var (
@@ -44,6 +46,8 @@ func NewConn(conn io.ReadWriteCloser) *Conn {
 	c.TubeSet = *NewTubeSet(c, "default")
 	c.used = "default"
 	c.watched = map[string]bool{"default": true}
+
+	c.auth = false // Initially, the connection is not authenticated.
 	return c
 }
 
@@ -65,6 +69,34 @@ func DialTimeout(network, addr string, timeout time.Duration) (*Conn, error) {
 		return nil, err
 	}
 	return NewConn(c), nil
+}
+
+// DialWithAuth connects addr on the given network using net.DialTimeout
+// with a supplied timeout and then returns a new Conn for the connection.
+func DialWithAuth(network, addr, password string) (*Conn, error) {
+	c, err := DialTimeout(network, addr, DefaultDialTimeout)
+	if err != nil {
+		return nil, err
+	}
+	if err := c.Tube.Auth(password); err != nil {
+		c.Close()
+		return nil, err
+	}
+	return c, nil
+}
+
+// DialWithAuthTimeout connects addr on the given network using net.DialTimeout
+// with a supplied timeout and then returns a new Conn for the connection.
+func DialWithAuthTimeout(network, addr, password string, timeout time.Duration) (*Conn, error) {
+	c, err := DialTimeout(network, addr, timeout)
+	if err != nil {
+		return nil, err
+	}
+	if err := c.Tube.Auth(password); err != nil {
+		c.Close()
+		return nil, err
+	}
+	return c, nil
 }
 
 // Close closes the underlying network connection.

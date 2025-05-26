@@ -20,6 +20,9 @@ func NewTube(c *Conn, name string) *Tube {
 // If the password is correct, the server will respond with "AUTHORIZED".
 // If the password is incorrect, the server will respond with "NOT_AUTHORIZED".
 func (t *Tube) Auth(password string) error {
+	if t.Conn != nil && t.Conn.auth {
+		return nil // Already authenticated.
+	}
 	r, err := t.Conn.cmd(t, nil, nil, "auth", password)
 	if err != nil {
 		return err
@@ -28,6 +31,7 @@ func (t *Tube) Auth(password string) error {
 	if err != nil {
 		return err
 	}
+	t.Conn.auth = true // Mark the connection as authenticated.
 	return nil
 }
 
