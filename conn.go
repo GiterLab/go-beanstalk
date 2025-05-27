@@ -78,6 +78,10 @@ func DialWithAuth(network, addr, password string) (*Conn, error) {
 	if err != nil {
 		return nil, err
 	}
+	if password == "" {
+		return c, nil // No authentication needed.
+	}
+
 	if err := c.Tube.Auth(password); err != nil {
 		c.Close()
 		return nil, err
